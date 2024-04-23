@@ -193,6 +193,7 @@
             <div id="kt_app_content_container" class="app-container  container-xxl">
                 <form method="post" action="{{ route('roles.update', $role) }}">
                     @csrf
+                    {{ method_field('PUT') }}
                     <div class="card card-flush py-4 mb-5">
                         <!--begin::Card header-->
                         <div class="card-header">
@@ -258,7 +259,15 @@
                             <div class="container">
                                 @php
                                     $div = 0;
+                                    $AssignPermissions = [];
                                 @endphp
+
+                                @foreach ($role_permissions as $item)
+                                    @php
+                                        $AssignPermissions[] = $item->permission_id
+                                    @endphp
+                                @endforeach
+                                {{-- @dd($AssignPermissions) --}}
                                 @foreach ($permissions as $key => $per_list)
                                     @php
                                         if ($div == 0) {
@@ -271,8 +280,10 @@
                                             class="form-label text-uppercase pb-1">{{ $key }}</label>
                                         @foreach ($per_list as $plist)
                                             <div class="form-check form-check-sm pb-1">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDefault">
+                                                <input class="form-check-input cursor-pointer" @if(in_array($plist->id,$AssignPermissions))
+                                                    {{ __('checked') }}
+                                                @endif type="checkbox" value="{{ $plist->id }}"
+                                                    name="permission[]">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     {{ $plist->title }}
                                                 </label>

@@ -741,6 +741,7 @@
             loadTableList();
             return false;
         });
+
         // Paginations Works
         $(document).on("change", ".custom_table_limit_length", function() {
             // console.log($(this));
@@ -748,11 +749,40 @@
             loadTableList();
             return false;
         });
+
         // Search Keyword Work
         $(document).on("keyup", ".custom_datatable_search", function(e) {
             search_keyword = $(this).val();
             loadTableList();
             return false;
         });
+
+        // const button = document.getElementByClass('custom_datatable_delete_button');
+        // button.addEventListener('click', e => {
+        //     e.preventDefault();
+        //     Swal.fire({
+        //         text: "Do you really want to delete this item?",
+        //         icon: "success",
+        //         buttonsStyling: false,
+        //         confirmButtonText: "Yes, Delete it!",
+        //         customClass: {
+        //             confirmButton: "btn btn-primary"
+        //         }
+        //     });
+        // });
+
+        // const button = document.getElementById('kt_docs_sweetalert_basic');
+        // button.addEventListener('click', e => {
+        //     e.preventDefault();
+        //     Swal.fire({
+        //         text: "Here's a basic example of SweetAlert!",
+        //         icon: "success",
+        //         buttonsStyling: false,
+        //         confirmButtonText: "Ok, got it!",
+        //         customClass: {
+        //             confirmButton: "btn btn-primary"
+        //         }
+        //     });
+        // });
     </script>
 @endsection

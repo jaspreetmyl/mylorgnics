@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
+use App\Models\Admin\RolePermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Constraint\Count;
@@ -73,6 +74,10 @@ class RolesController extends Controller
     public function create()
     {
         $data = [];
+        $permission = new Permission();
+        $permission = $permission->all();
+        $grouped_permissions = $permission->groupBy('group_title');
+        $data['permissions'] = $grouped_permissions;
         $data['module_details'] = $this->module_details;
         return view('admin.roles.create', $data);
     }
@@ -86,11 +91,22 @@ class RolesController extends Controller
             'role_title' => 'required',
             'role_gaurd' => 'required'
         ]);
-
         $role = new Role();
         $role->name = $request->input('role_title');
         $role->guard_name = $request->input('role_gaurd');
         $role->save();
+        // Permission Assigned to the Roles
+        $role_id = $role->id;
+        if ($request->permission) {
+            // Delete the All permission related to the Role
+            // $deletedPermissions = RolePermission::where('role_id', $role_id)->delete();
+            foreach ($request->permission as $permission) {
+                $RolePermission = new RolePermission();
+                $RolePermission->permission_id = $permission;
+                $RolePermission->role_id = $role_id;
+                $RolePermission->save();
+            }
+        }
         return redirect()->route('roles.index')->withSuccess('Role added Successfully!');
     }
 
@@ -107,16 +123,25 @@ class RolesController extends Controller
      */
     public function edit(string $id)
     {
-        $role = new Role();
-        $permission = new Permission();
-        $permission = $permission->all();
-        $grouped_permissions = $permission->groupBy('group_title');
 
-        $data = [];
-        $data['role'] = $role::find($id);
-        $data['permissions'] = $grouped_permissions;
-        $data['module_details'] = $this->module_details;
-        return view('admin.roles.edit', $data);
+        $role = new Role();
+        $role_details = $role::find($id);
+        if ($role_details) {
+            $role_id = $role_details->id;
+            $permission = new Permission();
+            $permission = $permission->all();
+            $grouped_permissions = $permission->groupBy('group_title');
+            // Assign Permissions
+            $assignPermissions = RolePermission::where('role_id', $role_id)->get();
+            $data = [];
+            $data['role'] = $role::find($id);
+            $data['permissions'] = $grouped_permissions;
+            $data['role_permissions'] = $assignPermissions;
+            $data['module_details'] = $this->module_details;
+            return view('admin.roles.edit', $data);
+        } else {
+            dd('Not Found Records');
+        }
     }
 
     /**
@@ -124,7 +149,27 @@ class RolesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'role_title' => 'required',
+            'role_gaurd' => 'required'
+        ]);
+        $role = Role::find($id);
+        $role->name = $request->input('role_title');
+        $role->guard_name = $request->input('role_gaurd');
+        $role->update();
+        // Permission Assigned to the Roles
+        $role_id = $role->id;
+        //Delete the All permission related to the Role
+        RolePermission::where('role_id', $role_id)->delete();
+        if ($request->permission) {
+            foreach ($request->permission as $permission) {
+                $RolePermission = new RolePermission();
+                $RolePermission->permission_id = $permission;
+                $RolePermission->role_id = $role_id;
+                $RolePermission->save();
+            }
+        }
+        return redirect()->route('roles.index')->withSuccess('Role Updates Successfully!');
     }
 
     /**
@@ -132,6 +177,10 @@ class RolesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        $role = Role::find($id);
+        RolePermission::where('role_id', $role->id)->delete();
+        $role->delete();
+        return redirect()->route('roles.index')->withSuccess('Role and Assigned Permissions Deleted Successfully!');
     }
 }
