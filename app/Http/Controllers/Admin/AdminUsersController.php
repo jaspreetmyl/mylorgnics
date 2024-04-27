@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AdminUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminUsersController extends Controller
 {
@@ -32,6 +33,9 @@ class AdminUsersController extends Controller
             'email' => 'Email',
             'created_at' => 'Added Date',
         );
+
+        //Define Here for global to declear parameter into the page
+
     }
 
     public function index(Request $request)
@@ -59,7 +63,7 @@ class AdminUsersController extends Controller
         }
         $data['module_details'] = $this->module_details;
         $data['keyword'] = $this->search_keyword;
-        return view('admin.adminuser.index',$data);
+        return view('admin.adminuser.index', $data);
     }
 
     /**
@@ -67,7 +71,9 @@ class AdminUsersController extends Controller
      */
     public function create()
     {
-        //
+        $data = [];
+        $data['module_details'] = $this->module_details;
+        return view('admin.adminuser.create', $data);
     }
 
     /**
@@ -75,7 +81,18 @@ class AdminUsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'email' => 'required|email:rfc,dns',
+            'name' => 'required',
+            'password' => 'required|confirmed|max:6'
+        ]);
+        $register = new AdminUsers();
+        $register->name = $request->input('name');
+        $register->email = $request->input('email');
+        $register->password = Hash::make($request->password);
+        $register->is_allowed = $request->input('is_allowed');
+        $register->save();
+        return redirect()->route('admin-user.index')->withSuccess('You have successfully added user!');
     }
 
     /**
@@ -91,15 +108,34 @@ class AdminUsersController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        $user = new AdminUsers();
+        $user_details = $user::find($id);
+        $data = [];
+        $data['user'] = $user_details;
+        $data['module_details'] = $this->module_details;
+        return view('admin.adminuser.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
-     */
+     **/
+
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'is_allowed' => 'required',
+        ]);
+        $user = new AdminUsers();
+        $user = $user::find($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        //ROLE ID
+        $user->is_allowed = $request->input('is_allowed');
+        $user->update();
+        return redirect()->route('admin-user.index')->withSuccess('User Updated Successfully!');
     }
 
     /**

@@ -256,6 +256,17 @@
                         <!--begin::Card body-->
                         <div class="card-body pt-0">
                             <div class="container">
+                                <div class="row mb-5">
+                                    <div class="col-md-12">
+                                        <div class="form-check form-check-sm pb-1">
+                                            <input class="form-check-input cursor-pointer" id="checkAll"
+                                                type="checkbox">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Check All
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                                 @php
                                     $div = 0;
                                 @endphp
@@ -272,8 +283,8 @@
                                             class="form-label text-uppercase pb-1">{{ $key }}</label>
                                         @foreach ($per_list as $plist)
                                             <div class="form-check form-check-sm pb-1">
-                                                <input class="form-check-input cursor-pointer" name="permission[]" type="checkbox"
-                                                    value="{{ $plist->id }}">
+                                                <input class="form-check-input cursor-pointer" name="permission[]"
+                                                    type="checkbox" value="{{ $plist->id }}">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     {{ $plist->title }}
                                                 </label>
@@ -311,4 +322,9 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $("#checkAll").click(function() {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
 @endsection

@@ -98,6 +98,22 @@
         @if (Session::has('error'))
             toastr.error("{{ Session::get('error') }}");
         @endif
+
+
+        // $('.btn').on('click', function() {
+        //     var $this = $(this);
+        //     var lable = $this.find('.indicator-label');
+        //     var loading = $this.find('.indicator-progress');
+        //     $this.prop('disabled', true);
+        //     lable.hide();
+        //     loading.show();
+        //     setTimeout(function() {
+        //         lable.show();
+        //         loading.hide();
+        //         $this.prop('disabled', false);
+        //     }, 8000);
+        //     return true;
+        // });
     </script>
 
 

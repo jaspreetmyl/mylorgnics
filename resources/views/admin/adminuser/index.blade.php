@@ -208,7 +208,7 @@
                             <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                                 <!--begin::Add user-->
                                 {{-- data-bs-target="#kt_modal_add_user" --}}
-                                <a href="{{ route('roles.create') }}" class="btn btn-primary">
+                                <a href="{{ route('admin-user.create') }}" class="btn btn-primary">
                                     <i class="ki-duotone ki-plus fs-2"></i> Add {{ _($module_details['button_title']) }}
                                 </a>
                                 <!--end::Add user-->
@@ -633,7 +633,7 @@
                     <div class="card-body py-4">
                         <!--begin::Datatable-->
 
-                        <table id="datatable" class="table align-middle table-row-dashed fs-6 gy-5 custom-datatable">
+                        <table id="datatabless" class="table align-middle table-row-dashed fs-6 gy-5 custom-datatable">
                             <thead>
                                 <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
                                     @foreach ($fields as $key => $field)

@@ -680,8 +680,6 @@
         <!--end::Content-->
 
     </div>
-    <!--end::Content wrapper-->
-
     <!--end::Javascript-->
 @endsection
 
@@ -722,21 +720,18 @@
         }
 
         $(document).on("click", ".page-link", function() {
-            // console.log($(this));
             page = $(this).data("page");
             loadTableList();
             return false;
         });
 
         $(document).on("click", ".previous", function() {
-            // console.log($(this));
             page = (page - 1);
             loadTableList();
             return false;
         });
 
         $(document).on("click", ".next", function() {
-            // console.log($(this));
             page = (page + 1);
             loadTableList();
             return false;
@@ -744,7 +739,6 @@
 
         // Paginations Works
         $(document).on("change", ".custom_table_limit_length", function() {
-            // console.log($(this));
             page_limit = this.value;
             loadTableList();
             return false;
@@ -757,32 +751,24 @@
             return false;
         });
 
-        // const button = document.getElementByClass('custom_datatable_delete_button');
-        // button.addEventListener('click', e => {
-        //     e.preventDefault();
-        //     Swal.fire({
-        //         text: "Do you really want to delete this item?",
-        //         icon: "success",
-        //         buttonsStyling: false,
-        //         confirmButtonText: "Yes, Delete it!",
-        //         customClass: {
-        //             confirmButton: "btn btn-primary"
-        //         }
-        //     });
-        // });
-
-        // const button = document.getElementById('kt_docs_sweetalert_basic');
-        // button.addEventListener('click', e => {
-        //     e.preventDefault();
-        //     Swal.fire({
-        //         text: "Here's a basic example of SweetAlert!",
-        //         icon: "success",
-        //         buttonsStyling: false,
-        //         confirmButtonText: "Ok, got it!",
-        //         customClass: {
-        //             confirmButton: "btn btn-primary"
-        //         }
-        //     });
-        // });
+        $(document).on("click", ".custom_datatable_delete_button", function(e) {
+            var formId =  $(this).attr('data-id');
+            Swal.fire({
+                text: "Are you sure you want to delete this item?",
+                icon: "warning",
+                showCancelButton: !0,
+                buttonsStyling: !1,
+                confirmButtonText: "Yes, delete!",
+                cancelButtonText: "No, cancel",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                },
+            }).then(function(response) {
+                if(response.isConfirmed == true){
+                    $("#delete_form_"+formId).submit();
+                }
+            });
+        });
     </script>
 @endsection

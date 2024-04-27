@@ -35,7 +35,7 @@ class RolesController extends Controller
         $this->table_fields = array(
             'id' => 'Id',
             'name' => 'Name',
-            'guard_name' => 'Guard Nname',
+            'guard_name' => 'Guard Name',
             'created_at' => 'Added Date',
         );
     }
